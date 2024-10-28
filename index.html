@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ad-Free YouTube Converter</title>
+    <style>
+        body {
+            background-color: #181818;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            color: #ff0000;
+            text-align: center;
+        }
+        #dropArea {
+            border: 2px dashed #ccc;
+            background-color: #282828;
+            padding: 50px;
+            width: 600px;
+            margin: 20px auto;
+            text-align: center;
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <h1>Ad-Free YouTube Converter</h1>
+    <div id="dropArea">
+        Drag & drop or paste the video link or URL here.
+    </div>
+    <script>
+        let previousWindow = null;
+        document.addEventListener('paste', function(e) {
+            const text = e.clipboardData.getData('text');
+            processUrl(text);
+        });
+        document.addEventListener('drop', function(e) {
+            e.preventDefault();
+            const text = e.dataTransfer.getData('text');
+            processUrl(text);
+        });
+        document.addEventListener('dragover', function(e) {
+            e.preventDefault();
+        });
+        function processUrl(url) {
+            let videoId;
+            if (url.includes('youtube.com/watch?v=')) {
+                videoId = url.split('v=')[1].split('&')[0];
+            } else if (url.includes('youtube.com/shorts/')) {
+                videoId = url.split('shorts/')[1];
+            } else if (url.includes('youtu.be/')) {
+                videoId = url.split('youtu.be/')[1];
+            }
+            if (videoId) {
+                const embedUrl = `https://www.youtube.com/embed/${videoId}`;
+                if (previousWindow && !previousWindow.closed) {
+                    previousWindow.close();
+                }
+                const screenWidth = window.innerWidth;
+                const screenHeight = window.innerHeight;
+                const width = Math.min(screenWidth * 0.8, 560);
+                const height = Math.min(screenHeight * 0.8, 315);
+                const x = window.screenX + (screenWidth - width) / 2;
+                const dropArea = document.getElementById('dropArea');
+                const dropAreaRect = dropArea.getBoundingClientRect();
+                const dropAreaBottom = dropAreaRect.bottom + window.scrollY;
+                const dropAreaHeight = dropArea.offsetHeight;
+                const dropAreaMargin = parseInt(window.getComputedStyle(dropArea).marginBottom);
+                const extraSpace = 120; // 追加の余白
+                const y = dropAreaBottom + dropAreaMargin + extraSpace;
+                const maxY = screenHeight - height;
+                const adjustedY = Math.min(y, maxY);
+                previousWindow = window.open(embedUrl, '_blank', `width=${width},height=${height},left=${x},top=${adjustedY}`);
+            }
+        }
+    </script>
+</body>
+</html>
