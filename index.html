@@ -43,6 +43,11 @@
         document.addEventListener('dragover', function(e) {
             e.preventDefault();
         });
+        document.addEventListener('click', function() {
+            if (previousWindow && !previousWindow.closed) {
+                previousWindow.focus();
+            }
+        });
         function processUrl(url) {
             let videoId;
             if (url.includes('youtube.com/watch?v=')) {
