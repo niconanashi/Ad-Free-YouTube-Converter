@@ -13,26 +13,45 @@
             color: #ffffff;
             text-align: center;
         }
+        #pasteButton {
+            display: block;
+            margin: 10px auto;
+            padding: 5px 10px;
+            background-color: #ffffff;
+            color: #000000;
+            border: none;
+            cursor: pointer;
+        }
         #dropArea {
             border: 2px dashed #ccc;
             background-color: #282828;
-            padding: 50px;
+            padding: 30px;
             width: 600px;
-            margin: 20px auto;
+            height: 30px;
+            margin: 10px auto;
             text-align: center;
             color: #ffffff;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow: hidden;
         }
     </style>
 </head>
 <body>
     <h1>Ad-Free YouTube Converter</h1>
-    <div id="dropArea">
-        Drag & drop or paste the video link or URL here.
+    <button id="pasteButton">Paste</button>
+    <div id="dropArea" contenteditable="true">
     </div>
     <script>
         let previousWindow = null;
-        let focusFlag = false;
+        dropArea.innerText = 'Drag & drop or paste the video link or URL here.';
+        document.getElementById('pasteButton').addEventListener('click', function() {
+            navigator.clipboard.readText().then(function(text) {
+                processUrl(text);
+            }).catch(function(err) {});
+        });
         document.addEventListener('paste', function(e) {
+            e.preventDefault();
             const text = e.clipboardData.getData('text');
             processUrl(text);
         });
@@ -43,16 +62,6 @@
         });
         document.addEventListener('dragover', function(e) {
             e.preventDefault();
-        });
-        document.addEventListener('click', function() {
-            if (previousWindow && !previousWindow.closed) {
-                if (focusFlag) {
-                    previousWindow.focus();
-                } else {
-                    window.focus();
-                }
-                focusFlag = !focusFlag;
-            }
         });
         function processUrl(url) {
             let videoId;
@@ -67,9 +76,6 @@
             }
             if (videoId) {
                 const embedUrl = `https://www.youtube.com/embed/${videoId}`;
-                if (previousWindow && !previousWindow.closed) {
-                    previousWindow.close();
-                }
                 const screenWidth = window.innerWidth;
                 const screenHeight = window.innerHeight;
                 const width = Math.min(screenWidth * 0.8, 560);
@@ -80,13 +86,13 @@
                 const dropAreaBottom = dropAreaRect.bottom + window.scrollY;
                 const dropAreaHeight = dropArea.offsetHeight;
                 const dropAreaMargin = parseInt(window.getComputedStyle(dropArea).marginBottom);
-                const extraSpace = 120; // 追加の余白
+                const extraSpace = 150;
                 const y = dropAreaBottom + dropAreaMargin + extraSpace;
                 const maxY = screenHeight - height;
                 const adjustedY = Math.min(y, maxY);
                 const windowFeatures = `width=${width},height=${height},left=${x},top=${adjustedY},noopener,noreferrer`;
                 previousWindow = window.open(embedUrl, '_blank', windowFeatures);
-                focusFlag = false;
+                dropArea.innerText = 'Drag & drop or paste the video link or URL here.';
             }
         }
     </script>
