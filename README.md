@@ -16,5 +16,5 @@ This project provides a simple web interface to convert YouTube video links to a
 3. The video will automatically open in a new, ad-free window.
 
 ## Note
-
-Due to potential changes in YouTube's specifications, this tool may not function as intended in the future.
+- Videos where the uploader has disabled playback on external players cannot be played.
+- Due to potential changes in YouTube's specifications, this tool may not function as intended in the future.
