@@ -84,7 +84,8 @@
                 const y = dropAreaBottom + dropAreaMargin + extraSpace;
                 const maxY = screenHeight - height;
                 const adjustedY = Math.min(y, maxY);
-                previousWindow = window.open(embedUrl, '_blank', `width=${width},height=${height},left=${x},top=${adjustedY}`);
+                const windowFeatures = `width=${width},height=${height},left=${x},top=${adjustedY},noopener,noreferrer`;
+                previousWindow = window.open(embedUrl, '_blank', windowFeatures);
                 focusFlag = false;
             }
         }
