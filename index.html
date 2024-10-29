@@ -31,6 +31,7 @@
     </div>
     <script>
         let previousWindow = null;
+        let focusFlag = false;
         document.addEventListener('paste', function(e) {
             const text = e.clipboardData.getData('text');
             processUrl(text);
@@ -45,7 +46,12 @@
         });
         document.addEventListener('click', function() {
             if (previousWindow && !previousWindow.closed) {
-                previousWindow.focus();
+                if (focusFlag) {
+                    previousWindow.focus();
+                } else {
+                    window.focus();
+                }
+                focusFlag = !focusFlag;
             }
         });
         function processUrl(url) {
@@ -79,6 +85,7 @@
                 const maxY = screenHeight - height;
                 const adjustedY = Math.min(y, maxY);
                 previousWindow = window.open(embedUrl, '_blank', `width=${width},height=${height},left=${x},top=${adjustedY}`);
+                focusFlag = false;
             }
         }
     </script>
