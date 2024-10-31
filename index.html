@@ -46,7 +46,7 @@
     <script>
         let previousWindow = null;
         //let focusFlag = false;
-        //const dropArea = document.getElementById('dropArea');
+        const dropArea = document.getElementById('dropArea');
         dropArea.innerText = 'Drag & drop or paste the video link or URL here.';
         document.getElementById('pasteButton').addEventListener('click', function() {
             navigator.clipboard.readText().then(function(text) {
