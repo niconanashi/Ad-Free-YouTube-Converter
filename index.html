@@ -45,8 +45,8 @@
     </div>
     <script>
         let previousWindow = null;
-        let focusFlag = false;
-        const dropArea = document.getElementById('dropArea');
+        //let focusFlag = false;
+        //const dropArea = document.getElementById('dropArea');
         dropArea.innerText = 'Drag & drop or paste the video link or URL here.';
         document.getElementById('pasteButton').addEventListener('click', function() {
             navigator.clipboard.readText().then(function(text) {
@@ -66,6 +66,7 @@
         document.addEventListener('dragover', function(e) {
             e.preventDefault();
         });
+        /*
         document.addEventListener('click', function() {
             if (previousWindow && !previousWindow.closed) {
                 if (focusFlag) {
@@ -76,6 +77,7 @@
                 focusFlag = !focusFlag;
             }
         });
+        */
         function processUrl(url) {
             let videoId;
             if (url.includes('youtube.com/watch?v=')) {
@@ -89,9 +91,9 @@
             }
             if (videoId) {
                 const embedUrl = `https://www.youtube.com/embed/${videoId}`;
-                if (previousWindow && !previousWindow.closed) {
-                    previousWindow.close();
-                }
+                //if (previousWindow && !previousWindow.closed) {
+                    //previousWindow.close();
+                //}
                 const screenWidth = window.innerWidth;
                 const screenHeight = window.innerHeight;
                 const width = Math.min(screenWidth * 0.8, 560);
@@ -104,6 +106,9 @@
                 const y = dropAreaBottom + dropAreaMargin + extraSpace;
                 const maxY = screenHeight - height;
                 const adjustedY = Math.min(y, maxY);
+                const windowFeatures = `width=${width},height=${height},left=${x},top=${adjustedY},noopener,noreferrer`;
+                previousWindow = window.open(embedUrl, '_blank', windowFeatures);
+                /*
                 const windowFeatures = `width=${width},height=${height},left=${x},top=${adjustedY}`;//noopener,noreferrer
                 previousWindow = window.open('', '_blank', windowFeatures);
                 previousWindow.document.write(`
@@ -133,6 +138,7 @@
                     </html>
                 `);
                 previousWindow.document.close();
+                */
                 dropArea.innerText = 'Drag & drop or paste the video link or URL here.';
                 focusFlag = false;
             }
